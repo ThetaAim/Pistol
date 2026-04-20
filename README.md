@@ -8,7 +8,7 @@
 
 Pistol automates the full printer deployment workflow on macOS:
 
-1. **Installs driver packages** (`.pkg`) using AppleScript with elevated privileges — no manual steps for the user.
+1. **Installs all driver packages** (`.pkg`) using AppleScript with elevated privileges — including the YSoft SafeQ client for pull-print authentication.
 2. **Creates and registers printers** via `lpadmin`, applying model-specific PPDs and IP addresses.
 3. **Copies print presets** directly into the user's macOS preferences, so every printer is ready with the correct paper, tray, and finishing defaults out of the box.
 
@@ -42,7 +42,12 @@ Pistol/
 │   └── Presets/
 │       └── Copy_Prst.py     # Copies .plist presets to ~/Library/Preferences
 ├── pkgs/
-│   └── Presets/             # Pre-configured Apple print preset plists
+│   ├── Black/               # Toshiba driver package
+│   ├── Color/               # Ricoh Color driver package
+│   ├── Fiery/               # Fiery driver package
+│   ├── Uniqe/               # Ricoh Unique driver package
+│   ├── Ysoft/               # YSoft SafeQ client package
+│   └── Presets/             # Apple print preset plists
 └── Tools/
     └── tools.py             # Path resolution utilities
 ```
@@ -55,16 +60,16 @@ Pistol/
 The app opens with a password prompt. Only authorized technicians can proceed — everyone else gets a silent exit.
 
 ### 2. Package Installation
-Each driver `.pkg` is passed to `installer` via `osascript`, which triggers macOS's native admin privilege dialog. All packages run in a single authenticated session. Output is streamed live into the UI text log.
+All `.pkg` files are passed through the same install loop via `osascript`, which triggers macOS's native admin privilege dialog. This includes the YSoft SafeQ client (first in the queue), followed by each printer driver. All packages run in a single authenticated session. Output is streamed live into the UI text log.
 
-### 3. Printer Creation
+### 4. Printer Creation
 After drivers are installed, the app calls `lpadmin` for each printer with:
 - A display name and queue name
 - The printer's IP address
 - The correct PPD file path
 - Model-specific hardware options (finishers, trays, drawers)
 
-### 4. Preset Deployment
+### 5. Preset Deployment
 Pre-built `.plist` files (Apple's native print preset format) are copied into `~/Library/Preferences`, making custom paper sizes, quality settings, and tray selections immediately available in every app's print dialog.
 
 ---
