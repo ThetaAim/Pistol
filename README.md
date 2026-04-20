@@ -73,7 +73,7 @@ Pre-built `.plist` files (Apple's native print preset format) are copied into `~
 
 The `pkgs/` folders are intentionally empty in this repo. Before building or running, place your files as follows:
 
-**Driver packages** — drop each `.pkg` into its matching folder:
+**Driver packages** — file names must match exactly as listed below:
 
 ```
 pkgs/Black/        → Black.pkg
@@ -82,6 +82,8 @@ pkgs/Fiery/        → fiery.pkg
 pkgs/Uniqe/        → unique.pkg
 pkgs/Ysoft/        → Ysoft.pkg
 ```
+
+> **Note:** File names are case-sensitive and must match exactly. If a file is missing or misnamed, the installer will skip it silently.
 
 > **SafeQ users:** If your organization uses [YSoft SafeQ](https://www.ysoft.com) as a print management platform, place the **SafeQ Client installer** (`.pkg`) in `pkgs/Ysoft/`. This is the pull-print client that authenticates users at the printer via badge or PIN. Without it, secure print release will not function. Obtain the installer from your SafeQ administrator or the YSoft portal.
 
