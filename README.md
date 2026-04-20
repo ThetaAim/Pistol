@@ -83,6 +83,8 @@ pkgs/Uniqe/        → unique.pkg
 pkgs/Ysoft/        → Ysoft.pkg
 ```
 
+> **SafeQ users:** If your organization uses [YSoft SafeQ](https://www.ysoft.com) as a print management platform, place the **SafeQ Client installer** (`.pkg`) in `pkgs/Ysoft/`. This is the pull-print client that authenticates users at the printer via badge or PIN. Without it, secure print release will not function. Obtain the installer from your SafeQ administrator or the YSoft portal.
+
 **Print presets** — drop your `.plist` files into:
 
 ```
