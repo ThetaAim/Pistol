@@ -1,4 +1,5 @@
- # Ignore virtual environment
+
+# Ignore virtual environment
 venv/
 
 # Ignore other files and directories
@@ -30,4 +31,13 @@ instruction.md
 Scripts/Service/
 
 # Package binaries and config - not part of showcase
-pkgs/
+pkgs/**/*.pkg
+pkgs/Presets/
+pkgs/Fiery/Fiery Software Uninstaller.app
+pkgs/Black/rem_black.command
+pkgs/Black/TOSHIBA_MonoMFP
+pkgs/Color/RICOH IM C3000
+pkgs/Uniqe/RICOH MP C4504
+pkgs/Ysoft/uninstall-safeq-client.command
+Scripts/Uninstaller/
+pkgs/Uninstaller/
