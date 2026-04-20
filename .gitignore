@@ -29,9 +29,5 @@ instruction.md
 # Not part of showcase
 Scripts/Service/
 
-# Uninstaller - not part of showcase
-Scripts/Uninstaller/
-pkgs/Uninstaller/
-pkgs/Fiery/Fiery Software Uninstaller.app
-pkgs/Black/rem_black.command
-pkgs/Presets/
+# Package binaries and config - not part of showcase
+pkgs/
