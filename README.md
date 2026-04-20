@@ -11,7 +11,6 @@ Pistol automates the full printer deployment workflow on macOS:
 1. **Installs driver packages** (`.pkg`) using AppleScript with elevated privileges — no manual steps for the user.
 2. **Creates and registers printers** via `lpadmin`, applying model-specific PPDs and IP addresses.
 3. **Copies print presets** directly into the user's macOS preferences, so every printer is ready with the correct paper, tray, and finishing defaults out of the box.
-4. **Self-destructs** — the `.app` bundle deletes itself after the user quits, leaving no installer artifacts behind.
 
 ---
 
@@ -68,8 +67,30 @@ After drivers are installed, the app calls `lpadmin` for each printer with:
 ### 4. Preset Deployment
 Pre-built `.plist` files (Apple's native print preset format) are copied into `~/Library/Preferences`, making custom paper sizes, quality settings, and tray selections immediately available in every app's print dialog.
 
-### 5. Self-Cleanup
-On quit, a background shell command (`sleep 3 && rm -rf`) removes the `.app` bundle — so the installer never lingers on the user's machine.
+---
+
+## Setup — Adding Your Files
+
+The `pkgs/` folders are intentionally empty in this repo. Before building or running, place your files as follows:
+
+**Driver packages** — drop each `.pkg` into its matching folder:
+
+```
+pkgs/Black/        → Black.pkg
+pkgs/Color/        → color.pkg
+pkgs/Fiery/        → fiery.pkg
+pkgs/Uniqe/        → unique.pkg
+pkgs/Ysoft/        → Ysoft.pkg
+```
+
+**Print presets** — drop your `.plist` files into:
+
+```
+pkgs/Presets/      → com.apple.print.custompresets.*.plist
+                   → com.apple.print.add.plist
+```
+
+These are Apple's native print preset format — export them from `~/Library/Preferences` on a configured machine.
 
 ---
 
