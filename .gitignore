@@ -1,4 +1,4 @@
-# Ignore virtual environment
+ # Ignore virtual environment
 venv/
 
 # Ignore other files and directories
@@ -6,9 +6,32 @@ venv/
 .idea/
 build/
 dist/
+Exported/
 *.pyc
 __pycache__/
 *.pkg
 *.app
 __init__.py
 venv*
+.venv/
+
+# Design source files
+psds for icons/
+
+# Local build/dev notes
+instruction.md
+"Creating Pyinstaller.txt"
+
+# Local Python environment
+.python-version
+.eggs/
+
+# Not part of showcase
+Scripts/Service/
+
+# Uninstaller - not part of showcase
+Scripts/Uninstaller/
+pkgs/Uninstaller/
+pkgs/Fiery/Fiery Software Uninstaller.app
+pkgs/Black/rem_black.command
+pkgs/Presets/

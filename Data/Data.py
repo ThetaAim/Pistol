@@ -8,6 +8,7 @@ packages = [
     (to_absolute('../pkgs/Uniqe/unique.pkg'), 'Unique'),
     (to_absolute('../pkgs/Black/Black.pkg'), 'Black')
 ]
+uninstall_path = [to_absolute('../pkgs/Uninstaller/')]
 
 printer_configs = [
     (

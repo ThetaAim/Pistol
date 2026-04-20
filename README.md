@@ -1,112 +1,97 @@
-# 🖨️ Pistol - Printer Installer for macOS
+# Pistol — Printer Installer
 
-**Pistol**, AKA "Printer Installer", is an intuitive macOS application designed to streamline the setup of multiple printers and apply their preferences automatically. It empowers users — especially students — to print their work directly from their laptops without relying on shared institutional devices, making printing faster, simpler, and more user-friendly.
-
-Built with care, clarity, and some command-line magic ✨ — just run and print.
+> A one-click macOS utility that silently installs, configures, and presets an entire print fleet for end users.
 
 ---
 
-## 🚀 Key Features
+## What It Does
 
-* 🧹 **Automated Printer Installation**: Installs multiple printers with minimal user action.
-* 📂 **Custom Printer Preferences**: Automatically applies presets and settings for each printer.
-* 🚀 **Compatibility**: Designed specifically for **macOS Sonoma** (Apple Silicon & Intel).
-* 💼 **User-Friendly Interface**: One-click install experience via a simple GUI.
+Pistol automates the full printer deployment workflow on macOS:
 
----
-
-## 🚧 Requirements
-
-* macOS Sonoma (M1 or Intel)
-* Admin privileges (prompted automatically)
-* Active connection (Wi-Fi or Ethernet) to the printer's network
+1. **Installs driver packages** (`.pkg`) using AppleScript with elevated privileges — no manual steps for the user.
+2. **Creates and registers printers** via `lpadmin`, applying model-specific PPDs and IP addresses.
+3. **Copies print presets** directly into the user's macOS preferences, so every printer is ready with the correct paper, tray, and finishing defaults out of the box.
+4. **Self-destructs** — the `.app` bundle deletes itself after the user quits, leaving no installer artifacts behind.
 
 ---
 
-## 🧰 What It Does
+## Printers Deployed
 
-1. **Authenticates** user via GUI input
-2. **Installs all required printer packages** via AppleScript (with admin rights)
-3. **Adds multiple printers** with custom `lpadmin` configurations (including advanced options)
-4. **Copies preset configuration files** to user preference folders
-5. **Optionally deploys an uninstaller app & LaunchDaemon** (automated via `copy_uninstaller_app()` and `generate_a_plist()`)
+| Queue Name | Model | Notes |
+|---|---|---|
+| **Fiery** | Ricoh Pro C7200S (E-35A PS) | Finisher + Perfect Binder configured |
+| **Color** | Ricoh IM C3000 | 1-cassette tray option |
+| **Unique** | Ricoh MP C4504 | Default settings |
+| **Black** | Toshiba e-STUDIO 4528A | Drawer stack configured |
 
----
-
-## 📦 Packages Installed
-
-| Printer | Package Path               | PPD Location                |
-| ------- | -------------------------- | --------------------------- |
-| Ysoft   | `../pkgs/Ysoft/Ysoft.pkg`  | —                           |
-| Fiery   | `../pkgs/Fiery/fiery.pkg`  | `Pro C7200Sseries E-35A PS` |
-| Color   | `../pkgs/Color/color.pkg`  | `RICOH IM C3000`            |
-| Unique  | `../pkgs/Uniqe/unique.pkg` | `RICOH MP C4504`            |
-| Black   | `../pkgs/Black/Black.pkg`  | `TOSHIBA_MonoMFP.gz`        |
+All printers are connected over the local network and registered under a shared print server location.
 
 ---
 
-## 🖥️ Sample Printers Created
-
-Configured via `lpadmin` using `sqport://`:
-
-* `Fiery`: `ColB` queue with multiple options (Binder, Finisher)
-* `Color`: `ColS` with tray settings
-* `Unique`: `Tos`
-* `Black`: `BWS` with model and pedestal selections
-
----
-
-## ⚙️ How to Use
-
-1. Place all `.pkg` and `.ppd` files in their respective folders (`../pkgs/...`)
-2. Launch the app:
-
-```bash
-python main.py
-```
-
-3. Enter the password when prompted (`1212` by default, can be changed in `main.py`)
-4. Watch the GUI log and wait for completion
-
----
-
-## 📁 Project Structure
+## Architecture
 
 ```
-Pistol-PrinterInstaller/
-├── main.py
+Pistol/
+├── main.py                  # Entry point — auth gate + Tkinter UI
 ├── Data/
-│   └── Data.py                # Contains pkg & printer configuration
+│   └── Data.py              # Package paths & printer config table
 ├── Scripts/
 │   ├── Installer/
-│   │   └── tk_installer.py    # GUI + AppleScript-based installer
+│   │   └── tk_installer.py  # AppleScript-based .pkg runner with live log output
 │   ├── Printers/
-│   │   └── Create_printer_with_settings.py
-│   ├── Presets/
-│   │   └── Copy_Prst.py       # Copies presets to ~/Library/Preferences
-│   └── Uninstaller/
-│       ├── copy_uninstaller.py
-│       └── Generate_plist.py
-├── Tools/
-│   └── tools.py
-└── pkgs/
-    ├── Ysoft/
-    ├── Fiery/
-    ├── Color/
-    ├── Uniqe/
-    ├── Black/
-    └── Presets/
+│   │   └── Create_printer_with_settings.py  # lpadmin wrapper
+│   └── Presets/
+│       └── Copy_Prst.py     # Copies .plist presets to ~/Library/Preferences
+├── pkgs/
+│   └── Presets/             # Pre-configured Apple print preset plists
+└── Tools/
+    └── tools.py             # Path resolution utilities
 ```
 
 ---
 
-## 👨‍💼 Author
+## How It Works
 
-**Oren Ohayon 🌟**
+### 1. Authentication
+The app opens with a password prompt. Only authorized technicians can proceed — everyone else gets a silent exit.
 
-Wishing you an awesome day — ✨Expect Miracles✨
+### 2. Package Installation
+Each driver `.pkg` is passed to `installer` via `osascript`, which triggers macOS's native admin privilege dialog. All packages run in a single authenticated session. Output is streamed live into the UI text log.
 
+### 3. Printer Creation
+After drivers are installed, the app calls `lpadmin` for each printer with:
+- A display name and queue name
+- The printer's IP address
+- The correct PPD file path
+- Model-specific hardware options (finishers, trays, drawers)
 
+### 4. Preset Deployment
+Pre-built `.plist` files (Apple's native print preset format) are copied into `~/Library/Preferences`, making custom paper sizes, quality settings, and tray selections immediately available in every app's print dialog.
 
+### 5. Self-Cleanup
+On quit, a background shell command (`sleep 3 && rm -rf`) removes the `.app` bundle — so the installer never lingers on the user's machine.
 
-   
+---
+
+## Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Language | Python 3 |
+| UI | Tkinter |
+| Installer execution | AppleScript via `osascript` |
+| Printer management | CUPS / `lpadmin` |
+| Distribution | PyInstaller (standalone `.app`) |
+| Platform | macOS — Apple Silicon & Intel |
+
+---
+
+## Requirements
+
+- macOS Sonoma or later
+- Network access to the printer subnet
+- Administrator credentials (prompted at install time)
+
+---
+
+*Built by [OREN Ohayon](https://github.com/ThetaAim)*

@@ -5,7 +5,7 @@ block_cipher = None
 
 a = Analysis(
     ['main.py'],
-    pathex=['/Users/administrator/Desktop/Pistol'],
+    pathex=[os.path.abspath('.')],
     binaries=[],
     datas=[
         ('pkgs', 'pkgs'),  # Include the pkgs directory
@@ -15,7 +15,7 @@ a = Analysis(
         ('Data', 'Data'),  # Include the Data directory
         ('Tools', 'Tools'),  # Include the Tools directory
     ],
-    hiddenimports=[],
+    hiddenimports=['encodings'],
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],
@@ -31,7 +31,7 @@ exe = EXE(
     a.scripts,
     [],
     exclude_binaries=True,
-    name='main',
+    name='Pistol',
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
@@ -41,7 +41,7 @@ exe = EXE(
     console=False,
     disable_windowed_traceback=False,
     argv_emulation=False,
-    target_arch=None,
+    target_arch='x86_64',  # ARM: change to 'arm64' and build with: arch -arm64 pyinstaller main.spec --distpath ./Exported/dist_arm
     codesign_identity=None,
     entitlements_file=None,
 )
@@ -59,7 +59,7 @@ coll = COLLECT(
 
 app = BUNDLE(
     coll,
-    name='main.app',
+    name='Pistol.app',
     icon='Icons/Icons.icns',
     bundle_identifier='com.yourcompany.main',
 )
