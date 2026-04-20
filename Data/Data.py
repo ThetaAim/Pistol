@@ -1,6 +1,18 @@
 import os
 from Tools.tools import to_absolute
 
+# ─────────────────────────────────────────────────────────────
+# CONFIGURATION LAYER — edit this file to adapt to your environment.
+#
+# packages: maps each .pkg file to its display name.
+#           File names and folder names must match exactly.
+#
+# printer_configs: defines each printer to register via lpadmin.
+#           Fields: (display_name, ip_address, queue_name, ppd_path, location, options)
+#           PPD paths are relative to /Library/Printers/PPDs/Contents/Resources/
+#           Options are model-specific — check your printer's PPD for valid keys.
+# ─────────────────────────────────────────────────────────────
+
 packages = [
     (to_absolute('../pkgs/Ysoft/Ysoft.pkg'), 'Ysoft'),
     (to_absolute('../pkgs/Fiery/fiery.pkg'), 'Fiery'),
